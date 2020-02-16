@@ -1,0 +1,19 @@
+{
+  "start_state": "window.location.href == \"https://www.w3schools.com/jsref/met_win_settimeout.asp\"";
+  "domain": "www.w3schools.com",
+  "end_state": "",
+  "functions": {
+    "scrape": {
+      "function": "xd = 5",
+      "return": "xd"
+    },
+    "next": {
+      "new_page": false,
+      "pause": 5,
+      "function": "console.log(\"next\")"
+    }
+  },
+  "save_data": {
+    "data_name": ""
+  }
+}
