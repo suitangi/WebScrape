@@ -12,3 +12,7 @@ Not intended to be released as a real extension, more of a dev-tool for easy and
 ## Usage
 Edit the `config.json`
 Edit the `scrape()` function in the `index.js` file.
+
+
+## Uses
+- Used this to scrape image links and metadata on mtgpics for backgrounds.
