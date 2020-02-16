@@ -1,19 +1,12 @@
 {
-  "start_state": "window.location.href == \"https://www.w3schools.com/jsref/met_win_settimeout.asp\"";
-  "domain": "www.w3schools.com",
-  "end_state": "",
-  "functions": {
-    "scrape": {
-      "function": "xd = 5",
-      "return": "xd"
-    },
-    "next": {
-      "new_page": false,
-      "pause": 5,
-      "function": "console.log(\"next\")"
-    }
-  },
-  "save_data": {
-    "data_name": ""
-  }
+	"start_state": "boolean: verifies the start state",
+	"domain": "www.example.com",
+	"end_state": "boolean: verifies end state",
+	"functions": {
+		"next": {
+			"new_page": false,
+			"pause": 5,
+			"function": "the function to go to the next state"
+		}
+	}
 }

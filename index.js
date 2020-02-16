@@ -1,19 +1,23 @@
-function scrape() {
-  let config = window.configJson;
-  eval(config.functions.scrape.function);
-  eval("return " + config.functions.scrape.return);
+
+// Olddata is the cumulative data from past iterations
+// Write whatever your scraping operation is
+// Add to the old data however you see fit and return the newest manipulated data
+function scrape(oldData) {
+
 }
 
-function saveData(data) {
-  let config = window.configJson;
-  let obj = {};
-  obj[config.save_data.data_name] = [];
-  chrome.storage.local.get(obj, function(oldData) {
-      let newData = oldData.(config.save_data.data_name);
-      newData.push(data);
-      obj[config.save_data.data_name] = newData;
-      chrome.storage.local.set(obj, function(){});
-  }
+
+
+// -------------- Don't touch Anything Under ------------- //
+function saveData() {
+  chrome.storage.local.get({
+    scraped_data: []
+  }, function(oldData) {
+    let newData = scrape(oldData.scraped_data);
+    chrome.storage.local.set({
+      scraped_data: newData
+    }, function() {});
+  });
 }
 
 function next() {
@@ -30,53 +34,55 @@ function next() {
 
 function run() {
   let config = window.configJson;
-  let data = scrape();
-  saveData(data);
+  saveData();
   if (!eval(config.end_state)) {
     next();
   } else {
-    console.log
+    chrome.storage.local.get({
+      scraped_data: []
+    }, function(data) {
+      console.log(data.scraped_data);
+    });
   }
 }
 
-function loadJson(json) {
-  window.configJson = json;
-}
-
-function init() {
-
+function loadJson() {
   //loads the json
   const jsonUrl = chrome.runtime.getURL('config.json');
   fetch(jsonUrl)
     .then((response) => response.json())
-    .then((json) => loadJson(json));
-  let config = window.configJson;
+    .then((json) => init(json));
+}
+
+function init(json) {
+  window.configJson = json;
+  let config = json;
 
   // if at start state
   if (eval(config.end_state)) {
     chrome.storage.local.set({
-      run: false;
+      run: false
     }, function() {
       run();
     });
   } else if (eval(config.start_state)) {
     chrome.storage.local.set({
-      run: true;
+      run: true,
+      scraped_data: []
     }, function() {
       run();
     });
   } else {
     if (window.location.href.includes(config.domain)) {
       chrome.storage.local.get({
-          run: false;
-        }, function(data) {
-          if (data.run) {
-            run();
-          }
+        run: false
+      }, function(data) {
+        if (data.run) {
+          run();
         }
       });
+    }
   }
-}
 }
 
 // document ready start
@@ -84,7 +90,7 @@ if (
   document.readyState === "complete" ||
   (document.readyState !== "loading" && !document.documentElement.doScroll)
 ) {
-  init();
+  loadJson();
 } else {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener("DOMContentLoaded", loadJson);
 }
